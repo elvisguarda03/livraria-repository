@@ -18,70 +18,55 @@ public class PopulaBanco {
 
 		em.getTransaction().begin();
 
-		Autor assis = geraAutor("Machado de Assis");
-		em.persist(assis);
+		Autor sergio = geraAutor("Sergio Lopes", "sergio.lopes@caelum.com.br");
+		em.persist(sergio);
+		
+		Autor nico = geraAutor("Nico Steppat", "nico.steppat@caelum.com.br");
+		em.persist(nico);
 
-		Autor amado = geraAutor("Jorge Amado");
-		em.persist(amado);
+		Autor mauricio = geraAutor("Mauricio Aniche", "aniche@teste.com.br");
+		em.persist(mauricio);
 
-		Autor coelho = geraAutor("Paulo Coelho");
-		em.persist(coelho);
+		Autor flavio = geraAutor("Flavio Almeida", "flavio.almeida@caelum.com.br");
+		em.persist(flavio);
+		
+		Autor paulo = geraAutor("Paulo Silveira", "paulo.silveira@caelum.com.br");
+		em.persist(paulo);
 
-		Livro casmurro = geraLivro("978-8-52-504464-8", "Dom Casmurro",
-				"10/01/1899", 24.90, assis);
-		Livro memorias = geraLivro("978-8-50-815415-9",
-				"Memorias Postumas de Bras Cubas", "01/01/1881", 19.90, assis);
-		Livro quincas = geraLivro("978-8-50-804084-1", "Quincas Borba",
-				"01/01/1891", 16.90, assis);
+		Livro mean = geraLivro("1345663423", "MEAN",
+				"26/02/2016", 49.9, flavio);
+		Livro java = geraLivro("199999999999",
+				"Arquitetura Java", "27/02/2016", 49.9, sergio, nico, paulo);
 
-		em.persist(casmurro);
-		em.persist(memorias);
-		em.persist(quincas);
-
-		Livro alquemista = geraLivro("978-8-57-542758-3", "O Alquimista",
-				"01/01/1988", 19.90, coelho);
-		Livro brida = geraLivro("978-8-50-567258-7", "Brida", "01/01/1990",
-				12.90, coelho);
-		Livro valkirias = geraLivro("978-8-52-812458-8", "As Valkirias",
-				"01/01/1992", 29.90, coelho);
-		Livro maao = geraLivro("978-8-51-892238-9", "O Diario de um Mago",
-				"01/01/1987", 9.90, coelho);
-
-		em.persist(alquemista);
-		em.persist(brida);
-		em.persist(valkirias);
-		em.persist(maao);
-
-		Livro capitaes = geraLivro("978-8-50-831169-1", "Capitaes da Areia",
-				"01/01/1937", 6.90, amado);
-		Livro flor = geraLivro("978-8-53-592569-9",
-				"Dona Flor e Seus Dois Maridos", "01/01/1966", 18.90, amado);
-
-		em.persist(capitaes);
-		em.persist(flor);
+		em.persist(mean);
+		em.persist(java);
 
 		em.getTransaction().commit();
 		em.close();
 	}
 
-	private static Autor geraAutor(String nome) {
+	private static Autor geraAutor(String nome, String email) {
 		Autor autor = new Autor();
 		autor.setNome(nome);
+		autor.setEmail(email);
 		return autor;
 	}
 
 	private static Livro geraLivro(String isbn, String titulo, String data,
-			double preco, Autor autor) {
+			double preco, Autor... autores) {
 		Livro livro = new Livro();
 		livro.setIsbn(isbn);
 		livro.setTitulo(titulo);
 		livro.setDataLancamento(parseData(data));
 		livro.setPreco(preco);
-		livro.adicionaAutor(autor);
+		
+		for (Autor a : autores) {
+			livro.adicionaAutor(a);
+		}
+		
 		return livro;
 	}
 
-	@SuppressWarnings("unused")
 	private static Calendar parseData(String data) {
 		try {
 			Date date = new SimpleDateFormat("dd/MM/yyyy").parse(data);

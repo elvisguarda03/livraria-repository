@@ -7,11 +7,20 @@
 
 <h:head />
 <h:body>
+	<div>
+		<h1>Usuário Logado: <h:outputText value="#{sessionScope['userLogged'].email}" /></h1>
+	</div>
 	<div id="cabecalho">
 		<h:graphicImage library="img" name="logo.png" />
+		
+		<h:form rendered="#{sessionScope['userLogged'] != null}">
+			<h:commandLink value="Logout" action="#{loginBean.logout}" />
+		</h:form>
+	
 		<h1>
 			<ui:insert name="title"></ui:insert>
 		</h1>
+		
 	</div>
 	<div id="conteudo">
 		<ui:insert name="content">

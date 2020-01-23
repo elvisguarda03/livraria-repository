@@ -35,5 +35,4 @@ public class Autor {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 }

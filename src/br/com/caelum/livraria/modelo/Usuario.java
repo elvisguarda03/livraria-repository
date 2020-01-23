@@ -1,11 +1,15 @@
 package br.com.caelum.livraria.modelo;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable {
+	private static final long serialVersionUID = 8886987299540261497L;
+
 	@Id
 	@GeneratedValue
 	private Integer id;
