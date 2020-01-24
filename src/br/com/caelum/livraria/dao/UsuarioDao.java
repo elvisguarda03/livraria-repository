@@ -11,7 +11,8 @@ public class UsuarioDao {
 	public boolean existsByEmailAndPass(String email, String senha) {
 		EntityManager em = new JPAUtil().getEntityManager();
 		
-		TypedQuery<Usuario> typedQuery = em.createQuery("FROM Usuario u where u.email = :pEmail and u.senha = :pSenha", Usuario.class);
+		TypedQuery<Usuario> typedQuery = em.createQuery(
+				"FROM Usuario u where u.email = :pEmail and u.senha = :pSenha", Usuario.class);
 		typedQuery.setParameter("pEmail", email);
 		typedQuery.setParameter("pSenha", senha);
 		

@@ -4,7 +4,7 @@ import javax.faces.context.FacesContext;
 
 public abstract class BaseBean {
 	
-	public final FacesContext getFacesContext() {
+	protected final FacesContext getFacesContext() {
 		return FacesContext.getCurrentInstance();
 	}
 }

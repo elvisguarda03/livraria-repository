@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.faces.application.FacesMessage;
@@ -16,16 +17,28 @@ import javax.faces.validator.ValidatorException;
 import br.com.caelum.livraria.dao.DAO;
 import br.com.caelum.livraria.modelo.Autor;
 import br.com.caelum.livraria.modelo.Livro;
+import br.com.caelum.livraria.modelo.LivroDataModel;
 
 @ManagedBean
 @ViewScoped
 public class LivroBean extends BaseBean implements Serializable {
 	private static final long serialVersionUID = 6825930412522332072L;
 	
+	private List<Livro> livros;
 	private Livro livro = new Livro();
+	private LivroDataModel livroDataModel = new LivroDataModel();
+	
 	private Integer autorId;
 	private Integer livroId;
 
+	public LivroDataModel getLivroDataModel() {
+		return livroDataModel;
+	}
+	
+	public void setLivroDataModel(LivroDataModel livroDataModel) {
+		this.livroDataModel = livroDataModel;
+	}
+	
 	public List<Autor> getAutoresLivro() {
 		return this.livro.getAutores();
 	}
@@ -77,6 +90,8 @@ public class LivroBean extends BaseBean implements Serializable {
 			dao.atualiza(livro);
 		}
 		
+		this.livros = dao.listaTodos();
+		
 		this.livro = new Livro();
 	}
 
@@ -103,13 +118,39 @@ public class LivroBean extends BaseBean implements Serializable {
 //		3 Parâmetro - É do tipo java.lang.Object e é um objeto que representa o valor digitado pelo usuário. 
 //		O objeto já foi convertido.
 		
-		if (!((String) value).startsWith("1")) {
+		if ( !((String) value).startsWith("1") ) {
 			throw new ValidatorException(new FacesMessage("Deveria começar com 1"));
 		}
 	}
 	
+	public boolean lessThan(Object columnValue, Object filter, Locale locale) {
+	
+		String text = (Objects.isNull(filter)) ? null : filter.toString().trim();
+		
+		if (Objects.isNull(text) || text.isBlank()) {
+			return true;
+		}
+		
+		if (Objects.isNull(columnValue)) {
+			return false;
+		}
+		
+		try {
+			Double typedPrice = Double.valueOf(text);
+			Double columnPrice = (Double)columnValue;
+			
+			return columnPrice.compareTo(typedPrice) < 0;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+	
 	public List<Livro> getLivros() {
-		return new DAO<Livro>(Livro.class).listaTodos();
+		if (Objects.isNull(this.livros)) {
+			this.livros = new DAO<Livro>(Livro.class).listaTodos();
+		}
+		
+		return this.livros;
 	}
 
 	public void associarAutor() {
