@@ -93,7 +93,7 @@
 					<h:outputText value="#{livro.isbn}" />
 				</p:column>
 				<p:column sortBy="#{livro.preco}" filterBy="#{livro.preco}" filterMatchMode="startsWith" 
-						filterFunction="#{livroBean.lessThan}">
+						filterFunction="#{livroBean.priceEqual}">
 					<f:facet name="header">Preço</f:facet>
 					<h:outputText value="#{livro.preco}">
 						<f:convertNumber type="currency" pattern="R$ #0.00"

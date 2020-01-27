@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import br.com.caelum.livraria.dao.DAO;
+import br.com.caelum.livraria.dao.AutorDao;
 import br.com.caelum.livraria.modelo.Autor;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class AutorBean implements Serializable {
 	private static final long serialVersionUID = 5962365339256649536L;
@@ -21,6 +22,9 @@ public class AutorBean implements Serializable {
 //	o controlador consegue recuperar a árvore da HttpSession já que na sessão vai ter pelo menos uma árvore para cada página.
 	
 	private Autor autor = new Autor();
+	
+	@Inject
+	private AutorDao dao;
 	private Integer autorId;
 	
 	public Integer getAutorId() {
@@ -40,17 +44,16 @@ public class AutorBean implements Serializable {
 	}
 	
 	public List<Autor> getAutores() {
-		return new DAO<Autor>(Autor.class).listaTodos();
+		return dao.listaTodos();
 	}
 
 	public String gravar() {
 		System.out.println("Gravando autor " + this.autor.getNome());
 		
-		DAO<Autor> dao = new DAO<Autor>(Autor.class);
 		if (Objects.isNull(this.autor.getId())) {
-			dao.adiciona(this.autor);
+			this.dao.adiciona(this.autor);
 		} else {
-			dao.atualiza(autor);
+			this.dao.atualiza(autor);
 		}
 		
 		this.autor = new Autor();
@@ -61,7 +64,7 @@ public class AutorBean implements Serializable {
 	public void remover(Autor autor) {
 		System.out.println("Removendo autor");
 		
-		new DAO<Autor>(Autor.class).remove(autor);
+		this.dao.remove(autor);
 	}
 	
 	public void carregar(Autor autor) {
@@ -69,7 +72,7 @@ public class AutorBean implements Serializable {
 	}
 
 	public void carregarAutorPeloId() {
-		this.autor = ofNullable(new DAO<Autor>(Autor.class).buscaPorId(this.getAutorId()))
+		this.autor = ofNullable(this.dao.buscaPorId(this.getAutorId()))
 				.orElse(new Autor());
 	}
 }

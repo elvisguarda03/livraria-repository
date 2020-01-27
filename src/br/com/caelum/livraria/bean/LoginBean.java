@@ -9,7 +9,7 @@ import br.com.caelum.livraria.dao.UsuarioDao;
 import br.com.caelum.livraria.modelo.Usuario;
 
 @ManagedBean
-public class LoginBean extends BaseBean {
+public class LoginBean extends BaseBean  {
 	private Usuario user = new Usuario();
 	
 	public Usuario getUser() {
